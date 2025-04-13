@@ -1,4 +1,4 @@
-type TCurrency = {
+type ResponseAsset = {
   askPrice: string
   askQty: string
   bidPrice: string
@@ -22,4 +22,6 @@ type TCurrency = {
   weightedAvgPrice: string
 }
 
-export { type TCurrency }
+type Asset = ResponseAsset & { title: string }
+
+export { type ResponseAsset, type Asset }
