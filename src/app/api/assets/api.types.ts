@@ -1,3 +1,5 @@
+import Decimal from 'decimal.js'
+
 type ResponseAsset = {
   askPrice: string
   askQty: string
@@ -24,4 +26,10 @@ type ResponseAsset = {
 
 type Asset = ResponseAsset & { title: string }
 
-export { type ResponseAsset, type Asset }
+type TrackedAsset = Asset & {
+  quantity: Decimal
+  totalValue: Decimal
+  weightInPortfolio: Decimal
+}
+
+export { type ResponseAsset, type Asset, type TrackedAsset }
