@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react'
-import { cn } from '@/lib/utils.ts'
+import { cn } from '@/utils/tailwind.ts'
 import { Slot } from '@radix-ui/react-slot'
 import Decimal, { Decimal as DecimalNameSpace } from 'decimal.js'
 

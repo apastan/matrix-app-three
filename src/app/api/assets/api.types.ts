@@ -26,10 +26,27 @@ type ResponseAsset = {
 
 type Asset = ResponseAsset & { title: string }
 
-type TrackedAsset = Asset & {
+type PortfolioAsset = {
+  title: Asset['title']
+  symbol: Asset['symbol']
+  lastPrice: Decimal
+  priceChangePercent: Asset['priceChangePercent']
   quantity: Decimal
   totalValue: Decimal
   weightInPortfolio: Decimal
 }
 
-export { type ResponseAsset, type Asset, type TrackedAsset }
+type PortfolioAssetCandidate = Omit<PortfolioAsset, 'weightInPortfolio'>
+
+type AssetFieldsToUpdate = {
+  lastPrice: Decimal
+  priceChangePercent: Asset['priceChangePercent']
+}
+
+export {
+  type ResponseAsset,
+  type Asset,
+  type PortfolioAsset,
+  type AssetFieldsToUpdate,
+  type PortfolioAssetCandidate,
+}

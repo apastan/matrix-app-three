@@ -1,6 +1,6 @@
 import { Loader2 } from 'lucide-react'
 import { ComponentProps } from 'react'
-import { cn } from '@/lib/utils.ts'
+import { cn } from '@/utils/tailwind.ts'
 
 const InfiniteLoader = ({
   className,
