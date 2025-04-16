@@ -99,7 +99,7 @@ function App() {
             >
               <InfiniteLoader size={40} />
             </div>
-          ) : (
+          ) : portfolioAssets.length > 0 ? (
             <main>
               <Table>
                 <TableHeader>
@@ -151,6 +151,14 @@ function App() {
                 </TableBody>
               </Table>
             </main>
+          ) : (
+            <div
+              className={
+                'flex justify-center items-center min-h-[calc(100vh-76px)]'
+              }
+            >
+              Нет активов в вашем портфеле. Добавьте что-нибудь, чтобы начать!
+            </div>
           )}
         </Container>
       </main>
