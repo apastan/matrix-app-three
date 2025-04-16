@@ -34,6 +34,7 @@ import {
   PortfolioAsset,
   PortfolioAssetCandidate,
 } from '@/app/api/assets'
+import { useVirtualizer } from '@tanstack/react-virtual'
 
 type Props = {
   assetsFullList: Asset[]
@@ -57,7 +58,13 @@ export function AddAssetToPortfolioDialog({
     searchRegex.test(str.symbol)
   )
 
-  const virtualizedList = filteredAssetsFullList.slice(0, 10)
+  const scrollRef = useRef(null)
+  const rowVirtualizer = useVirtualizer({
+    count: filteredAssetsFullList.length,
+    getScrollElement: () => scrollRef.current,
+    estimateSize: () => 37,
+    overscan: 5,
+  })
 
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null)
 
@@ -169,7 +176,7 @@ export function AddAssetToPortfolioDialog({
           onChange={handleSearchInputChange}
         />
 
-        <ScrollArea className={'h-[200px]'}>
+        <ScrollArea className={'h-[300px]'} viewportRef={scrollRef}>
           {isLoading ? (
             <div
               className={'h-[200px] w-full flex justify-center items-center '}
@@ -178,25 +185,47 @@ export function AddAssetToPortfolioDialog({
             </div>
           ) : (
             <Table>
-              <TableBody>
-                {virtualizedList.map((el) => {
+              <TableBody
+                style={{
+                  height: `${rowVirtualizer.getTotalSize()}px`,
+                  width: '100%',
+                  position: 'relative',
+                }}
+              >
+                {rowVirtualizer.getVirtualItems().map((virtualItem) => {
+                  const el = filteredAssetsFullList[virtualItem.index]
                   return (
                     <TableRow
-                      key={el.symbol}
+                      key={virtualItem.key}
                       className={'hover:bg-gray-100 cursor-pointer group'}
                       onClick={() => {
                         setSelectedAsset(el)
                       }}
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        display: 'flex',
+                        height: `${virtualItem.size}px`,
+                        transform: `translateY(${virtualItem.start}px)`,
+                      }}
                     >
-                      <TableCell className={'group-hover:rounded-l-md '}>
+                      <TableCell
+                        className={'group-hover:rounded-l-md'}
+                        style={{ flex: '1', minWidth: 0 }}
+                      >
                         {el.title}
                       </TableCell>
-                      <TableCell>
+                      <TableCell style={{ flex: '1', minWidth: 0 }}>
                         <FormattedDecimal before={'$'} rounding={6}>
                           {el.lastPrice}
                         </FormattedDecimal>
                       </TableCell>
-                      <TableCell className={'group-hover:rounded-r-md'}>
+                      <TableCell
+                        style={{ flex: '1', minWidth: 0 }}
+                        className={'group-hover:rounded-r-md text-right pr-6'}
+                      >
                         <FormattedDecimal withColors after={'%'} withPlusSign>
                           {el.priceChangePercent}
                         </FormattedDecimal>
