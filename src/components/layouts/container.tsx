@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react'
-import { cn } from '@/utils/tailwind.ts'
+import { cn } from '@/utils/cn.ts'
 
 const Container = ({
   className,

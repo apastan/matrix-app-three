@@ -1,2 +1,1 @@
-export * from './assets.ts'
-export * from './tailwind.ts'
+export * from './cn.ts'

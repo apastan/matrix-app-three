@@ -1,18 +1,10 @@
-import { useEffect, useMemo, useState } from 'react'
-import {
-  FormattedDecimal,
-  InfiniteLoader,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/'
-import { Asset, assetsAPI, PortfolioAsset } from '@/app/api/assets/'
+import { useEffect, useState } from 'react'
 import { Container } from '@/components/layouts'
-import { AddAssetToPortfolioDialog } from '@/add-asset-to-portfolio-dialog.tsx'
-import { useBinanceWebSocket } from '@/useBinanceWebSocket.ts'
-import { updateAssetPricesInPortfolio } from '@/utils'
-import { Table, TableHead } from '@/components/ui/table.tsx'
+import { AddAssetToPortfolioDialog } from '@/features/portfolio/ui/'
+import { Asset, assetsAPI } from '@/features/portfolio/api'
+import { PortfolioAsset } from '@/features/portfolio/types'
+import { Portfolio } from '@/features/portfolio/ui/portfolio.tsx'
+import { InfiniteLoader } from '@/components/ui'
 
 function App() {
   const [isLoading, setIsLoading] = useState(true)
@@ -27,7 +19,7 @@ function App() {
     ;(async () => {
       try {
         setIsLoading(true)
-        const response = await assetsAPI.get24hr()
+        const response = await assetsAPI.getAllAssets24hrData()
 
         const data = response.data
         const onlyUSDTAssets = data.filter(
@@ -48,29 +40,6 @@ function App() {
     })()
   }, [])
 
-  // Получаем символы из портфеля
-  const symbols = useMemo(
-    () => portfolioAssets.map((asset) => asset.symbol),
-    [
-      portfolioAssets
-        .map((asset) => asset.symbol)
-        .sort() // Сортируем, чтобы игнорировать порядок активов в портфеле
-        .join(','),
-    ]
-  )
-  console.log('symbols', symbols)
-  // Используем хук для WebSocket
-  const tickerData = useBinanceWebSocket(symbols)
-
-  // Обновляем portfolioAssets при получении новых данных от WebSocket
-  useEffect(() => {
-    if (Object.keys(tickerData).length > 0) {
-      setPortfolioAssets((portfolio) =>
-        updateAssetPricesInPortfolio(portfolio, tickerData)
-      )
-    }
-  }, [tickerData])
-
   return (
     <>
       <header className={'pt-5 pb-5'}>
@@ -78,10 +47,9 @@ function App() {
           <div>Portfolio Overview</div>
 
           <AddAssetToPortfolioDialog
-            updateAssetsFullList={setAssetsFullList}
-            updatePortfolioAssets={setPortfolioAssets}
+            setAssetsFullList={setAssetsFullList}
+            setPortfolioAssets={setPortfolioAssets}
             assetsFullList={assetsFullList}
-            portfolioAssets={portfolioAssets}
             onOpenChange={(open) => {
               console.log(open)
             }}
@@ -99,66 +67,11 @@ function App() {
             >
               <InfiniteLoader size={40} />
             </div>
-          ) : portfolioAssets.length > 0 ? (
-            <main>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Актив</TableHead>
-                    <TableHead>Количество</TableHead>
-                    <TableHead>Цена</TableHead>
-                    <TableHead>Общая стоимость</TableHead>
-                    <TableHead>Изм. за 24 ч.</TableHead>
-                    <TableHead>% портфеля</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {portfolioAssets.map((a) => (
-                    <TableRow key={a.symbol}>
-                      <TableCell>{a.title}</TableCell>
-                      <TableCell>
-                        <FormattedDecimal rounding={5}>
-                          {a.quantity}
-                        </FormattedDecimal>
-                      </TableCell>
-                      <TableCell>
-                        <FormattedDecimal rounding={2} before={'$'}>
-                          {a.lastPrice}
-                        </FormattedDecimal>
-                      </TableCell>
-                      <TableCell>
-                        <FormattedDecimal rounding={2} before={'$'}>
-                          {a.totalValue}
-                        </FormattedDecimal>
-                      </TableCell>
-                      <TableCell>
-                        <FormattedDecimal
-                          rounding={2}
-                          withColors
-                          withPlusSign
-                          after={'%'}
-                        >
-                          {a.priceChangePercent}
-                        </FormattedDecimal>
-                      </TableCell>
-                      <TableCell>
-                        <FormattedDecimal rounding={2} after={'%'}>
-                          {a.weightInPortfolio}
-                        </FormattedDecimal>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </main>
           ) : (
-            <div
-              className={
-                'flex justify-center items-center min-h-[calc(100vh-76px)]'
-              }
-            >
-              Нет активов в вашем портфеле. Добавьте что-нибудь, чтобы начать!
-            </div>
+            <Portfolio
+              setPortfolioAssets={setPortfolioAssets}
+              portfolioAssets={portfolioAssets}
+            />
           )}
         </Container>
       </main>

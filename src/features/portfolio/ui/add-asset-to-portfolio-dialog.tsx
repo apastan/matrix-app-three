@@ -27,26 +27,27 @@ import {
   useState,
 } from 'react'
 import Decimal from 'decimal.js'
-import { addAssetToPortfolio, updateAssetQuantity } from '@/utils/assets.ts'
 import {
-  Asset,
-  assetsAPI,
+  addAssetToPortfolio,
+  updateAssetQuantityInPortfolio,
+} from '@/features/portfolio/lib'
+import { Asset, assetsAPI } from '@/features/portfolio/api'
+import { useVirtualizer } from '@tanstack/react-virtual'
+import {
   PortfolioAsset,
   PortfolioAssetCandidate,
-} from '@/app/api/assets'
-import { useVirtualizer } from '@tanstack/react-virtual'
+} from '@/features/portfolio/types'
 
 type Props = {
   assetsFullList: Asset[]
-  portfolioAssets: PortfolioAsset[]
-  updateAssetsFullList: Dispatch<SetStateAction<Asset[]>>
-  updatePortfolioAssets: Dispatch<SetStateAction<PortfolioAsset[]>>
+  setAssetsFullList: Dispatch<SetStateAction<Asset[]>>
+  setPortfolioAssets: Dispatch<SetStateAction<PortfolioAsset[]>>
 } & ComponentProps<typeof Dialog>
 
 export function AddAssetToPortfolioDialog({
   assetsFullList,
-  updateAssetsFullList,
-  updatePortfolioAssets,
+  setAssetsFullList,
+  setPortfolioAssets,
   onOpenChange,
   ...restDialogProps
 }: Props) {
@@ -105,13 +106,17 @@ export function AddAssetToPortfolioDialog({
         totalValue,
       }
 
-      updatePortfolioAssets((portfolio) => {
+      setPortfolioAssets((portfolio) => {
         const isNewAssetInPortfolio = portfolio.find(
           (a) => a.symbol === newAssetToPortfolio.symbol
         )
 
         if (isNewAssetInPortfolio) {
-          return updateAssetQuantity(portfolio, selectedAsset.symbol, quantity)
+          return updateAssetQuantityInPortfolio(
+            portfolio,
+            selectedAsset.symbol,
+            quantity
+          )
         }
 
         return addAssetToPortfolio(portfolio, newAssetToPortfolio)
@@ -127,7 +132,7 @@ export function AddAssetToPortfolioDialog({
     ;(async () => {
       try {
         setIsLoading(true)
-        const response = await assetsAPI.get24hr()
+        const response = await assetsAPI.getAllAssets24hrData()
 
         const data = response.data
         const onlyUSDTAssets = data.filter(
@@ -139,7 +144,7 @@ export function AddAssetToPortfolioDialog({
         }))
         // TODO rewrite to loop
         // TODO remove unused fields
-        updateAssetsFullList(assetsWithTitleField)
+        setAssetsFullList(assetsWithTitleField)
       } catch (error) {
         console.log('error getting assets 24hr') // TODO add Sonner component
       } finally {

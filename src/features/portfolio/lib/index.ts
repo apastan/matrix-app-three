@@ -1,16 +1,15 @@
-import {
-  AssetFieldsToUpdate,
-  PortfolioAsset,
-  PortfolioAssetCandidate,
-} from '@/app/api/assets'
 import Decimal from 'decimal.js'
+import {
+  type AssetFieldsToUpdate,
+  type PortfolioAsset,
+  type PortfolioAssetCandidate,
+} from '@/features/portfolio/types'
 
-function updateAssetQuantity(
+function updateAssetQuantityInPortfolio(
   portfolio: PortfolioAsset[],
   symbol: string,
   newQuantity: Decimal
 ): PortfolioAsset[] {
-  // Обновляем актив
   const updatedPortfolio = portfolio.map((asset) => {
     if (asset.symbol === symbol) {
       return {
@@ -96,7 +95,7 @@ function recalculatePortfolioWeights(
 }
 
 export {
-  updateAssetQuantity,
+  updateAssetQuantityInPortfolio,
   addAssetToPortfolio,
   updateAssetPricesInPortfolio,
   recalculatePortfolioWeights,

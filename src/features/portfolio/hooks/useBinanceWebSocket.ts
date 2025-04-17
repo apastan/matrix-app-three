@@ -1,12 +1,10 @@
-// hooks/useBinanceWebSocket.ts
 import { useEffect, useRef, useState } from 'react'
 import Decimal from 'decimal.js'
 
-// Типизация данных тикера
 interface TickerData {
   s: string // Символ (например, "BTCUSDT")
   c: string // Последняя цена
-  P: string // Процент изменения
+  P: string // Процент изменения за 24 часа
 }
 
 interface TickerMessage {
