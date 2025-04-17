@@ -33,4 +33,15 @@ function recalculatePortfolioWeights(
   }))
 }
 
-export { createTitleFromSymbol, recalculatePortfolioWeights }
+function getPortfolioSymbolsAsString(portfolioAssets: PortfolioAsset[]) {
+  return portfolioAssets
+    .map((asset) => asset.symbol)
+    .sort() // Сортируем, чтобы игнорировать порядок активов в портфеле
+    .join(',')
+}
+
+export {
+  createTitleFromSymbol,
+  recalculatePortfolioWeights,
+  getPortfolioSymbolsAsString,
+}

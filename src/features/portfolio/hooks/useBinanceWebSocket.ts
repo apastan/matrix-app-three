@@ -18,7 +18,7 @@ interface WebSocketData {
 
 type WebSocketState = Record<string, WebSocketData>
 
-function useBinanceWebSocket(symbols: string[]) {
+function useBinanceWebSocket(PortfolioSymbolsAsString: string) {
   const [tickerData, setTickerData] = useState<WebSocketState>({})
   const wsRef = useRef<WebSocket | null>(null)
   const subscribedSymbolsRef = useRef<Set<string>>(new Set())
@@ -79,7 +79,7 @@ function useBinanceWebSocket(symbols: string[]) {
     const updateSubscriptions = () => {
       if (wsRef.current?.readyState !== WebSocket.OPEN) return
 
-      const currentSymbols = new Set(symbols)
+      const currentSymbols = new Set(PortfolioSymbolsAsString.split(','))
       const subscribedSymbols = subscribedSymbolsRef.current
 
       // Подписываемся на новые символы
@@ -135,7 +135,7 @@ function useBinanceWebSocket(symbols: string[]) {
         wsRef.current.onopen = null
       }
     }
-  }, [symbols])
+  }, [PortfolioSymbolsAsString])
 
   return tickerData
 }

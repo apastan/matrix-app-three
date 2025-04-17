@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 import { useBinanceWebSocket } from '@/features/portfolio/hooks'
 import {
   FormattedDecimal,
@@ -11,24 +11,16 @@ import {
 } from '@/components/ui'
 import { useAppDispatch, useAppSelector } from '@/app/types.ts'
 import { updateAssetPrices } from '@/features/portfolio/store'
+import { getPortfolioSymbolsAsString } from '@/features/portfolio/lib'
 
 function Portfolio() {
   const dispatch = useAppDispatch()
   const portfolioAssets = useAppSelector((state) => state.portfolio)
 
-  // Получаем символы из портфеля
-  const symbols = useMemo(
-    () => portfolioAssets.map((asset) => asset.symbol),
-    [
-      portfolioAssets
-        .map((asset) => asset.symbol)
-        .sort() // Сортируем, чтобы игнорировать порядок активов в портфеле
-        .join(','),
-    ]
-  )
-  console.log('symbols', symbols)
-  // Используем хук для WebSocket
-  const tickerData = useBinanceWebSocket(symbols)
+  // Получаем символы из портфеля вида
+  const PortfolioSymbolsAsString = getPortfolioSymbolsAsString(portfolioAssets)
+
+  const tickerData = useBinanceWebSocket(PortfolioSymbolsAsString)
 
   // Обновляем portfolioAssets при получении новых данных от WebSocket
   useEffect(() => {
