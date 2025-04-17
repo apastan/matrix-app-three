@@ -18,6 +18,7 @@ import {
 import { useAppDispatch, useAppSelector } from '@/app/types.ts'
 import { removeAsset, updateAssetPrices } from '@/features/portfolio/store'
 import { getPortfolioSymbolsAsString } from '@/features/portfolio/lib'
+import { toast } from 'sonner'
 
 function Portfolio() {
   const dispatch = useAppDispatch()
@@ -46,6 +47,7 @@ function Portfolio() {
   const confirmRemoveAsset = () => {
     if (assetToRemove) {
       dispatch(removeAsset(assetToRemove))
+      toast(`Актив ${assetToRemove} удален из портфеля`)
     }
     setAssetToRemove(null)
   }

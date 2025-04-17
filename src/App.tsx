@@ -3,13 +3,10 @@ import { AddAssetToPortfolioDialog } from '@/features/portfolio/ui/'
 import { useGetAllAssets24hrQuery } from '@/features/portfolio/api'
 import { Toaster } from '@/components/ui/sonner'
 import { Portfolio } from '@/features/portfolio/ui/portfolio.tsx'
-import { Button, InfiniteLoader } from '@/components/ui'
-import { useTheme } from 'next-themes'
+import { InfiniteLoader } from '@/components/ui'
 
 function App() {
   const { isLoading } = useGetAllAssets24hrQuery()
-
-  const { setTheme } = useTheme()
 
   return (
     <>
@@ -18,7 +15,6 @@ function App() {
         <Container className={'flex justify-between items-center'}>
           <div>Portfolio Overview</div>
 
-          <Button onClick={() => setTheme('dark')}>Change theme</Button>
           <AddAssetToPortfolioDialog />
         </Container>
       </header>
