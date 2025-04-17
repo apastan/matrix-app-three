@@ -94,9 +94,14 @@ function recalculatePortfolioWeights(
   }))
 }
 
+function createTitleFromSymbol(symbol: string) {
+  return symbol.replace('USDT', '')
+}
+
 export {
   updateAssetQuantityInPortfolio,
   addAssetToPortfolio,
   updateAssetPricesInPortfolio,
   recalculatePortfolioWeights,
+  createTitleFromSymbol,
 }

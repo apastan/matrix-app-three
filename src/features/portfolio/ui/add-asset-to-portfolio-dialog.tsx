@@ -29,9 +29,13 @@ import {
 import Decimal from 'decimal.js'
 import {
   addAssetToPortfolio,
+  createTitleFromSymbol,
   updateAssetQuantityInPortfolio,
 } from '@/features/portfolio/lib'
-import { Asset, assetsAPI } from '@/features/portfolio/api'
+import {
+  Asset24hrTicker,
+  useGetAllAssets24hrQuery,
+} from '@/features/portfolio/api'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import {
   PortfolioAsset,
@@ -39,24 +43,24 @@ import {
 } from '@/features/portfolio/types'
 
 type Props = {
-  assetsFullList: Asset[]
-  setAssetsFullList: Dispatch<SetStateAction<Asset[]>>
   setPortfolioAssets: Dispatch<SetStateAction<PortfolioAsset[]>>
 } & ComponentProps<typeof Dialog>
 
 export function AddAssetToPortfolioDialog({
-  assetsFullList,
-  setAssetsFullList,
   setPortfolioAssets,
   onOpenChange,
   ...restDialogProps
 }: Props) {
-  const [isLoading, setIsLoading] = useState(true)
+  const {
+    data: assetsFullList = [],
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetAllAssets24hrQuery()
 
   const [searchValue, setSearchValue] = useState('')
-  const searchRegex = new RegExp(searchValue, 'i')
-  const filteredAssetsFullList = assetsFullList.filter((str) =>
-    searchRegex.test(str.symbol)
+  const filteredAssetsFullList = assetsFullList.filter((asset) =>
+    asset.symbol.toLowerCase().includes(searchValue.toLowerCase())
   )
 
   const scrollRef = useRef(null)
@@ -67,7 +71,9 @@ export function AddAssetToPortfolioDialog({
     overscan: 5,
   })
 
-  const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null)
+  const [selectedAsset, setSelectedAsset] = useState<Asset24hrTicker | null>(
+    null
+  )
 
   const assetQuantityInputRef = useRef<HTMLInputElement>(null)
   const isAssetQuantityValid = useRef<boolean>(false)
@@ -128,36 +134,12 @@ export function AddAssetToPortfolioDialog({
     }
   }
 
-  const getData = () => {
-    ;(async () => {
-      try {
-        setIsLoading(true)
-        const response = await assetsAPI.getAllAssets24hrData()
-
-        const data = response.data
-        const onlyUSDTAssets = data.filter(
-          (asset) => asset.symbol.endsWith('USDT') && asset.count > 0
-        )
-        const assetsWithTitleField = onlyUSDTAssets.map((asset) => ({
-          ...asset,
-          title: asset.symbol.replace('USDT', ''),
-        }))
-        // TODO rewrite to loop
-        // TODO remove unused fields
-        setAssetsFullList(assetsWithTitleField)
-      } catch (error) {
-        console.log('error getting assets 24hr') // TODO add Sonner component
-      } finally {
-        setIsLoading(false)
-      }
-    })()
-  }
-
   return (
     <Dialog
       onOpenChange={(open) => {
         if (open) {
-          getData()
+          // получаем самые актуальные данные, инвалидируем кэш
+          refetch()
         } else {
           setTimeout(clearSelectedAsset, 200)
         }
@@ -176,15 +158,15 @@ export function AddAssetToPortfolioDialog({
 
         <Input
           type={'text'}
-          disabled={isLoading}
+          disabled={isLoading || isFetching}
           value={searchValue}
           onChange={handleSearchInputChange}
         />
 
         <ScrollArea className={'h-[300px]'} viewportRef={scrollRef}>
-          {isLoading ? (
+          {isLoading || isFetching ? (
             <div
-              className={'h-[200px] w-full flex justify-center items-center '}
+              className={'h-[300px] w-full flex justify-center items-center '}
             >
               <InfiniteLoader />
             </div>
@@ -220,7 +202,7 @@ export function AddAssetToPortfolioDialog({
                         className={'group-hover:rounded-l-md'}
                         style={{ flex: '1', minWidth: 0 }}
                       >
-                        {el.title}
+                        {createTitleFromSymbol(el.symbol)}
                       </TableCell>
                       <TableCell style={{ flex: '1', minWidth: 0 }}>
                         <FormattedDecimal before={'$'} rounding={6}>
@@ -252,7 +234,7 @@ export function AddAssetToPortfolioDialog({
                 htmlFor={'selected-asset'}
                 className={'flex justify-center items-center gap-3'}
               >
-                <span>{selectedAsset.title}</span>
+                <span>{createTitleFromSymbol(selectedAsset.symbol)}</span>
                 <span>${selectedAsset.lastPrice}</span>
               </Label>
 

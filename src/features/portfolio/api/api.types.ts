@@ -1,4 +1,4 @@
-type ResponseAsset = {
+type Asset24hrTicker = {
   askPrice: string
   askQty: string
   bidPrice: string
@@ -22,6 +22,6 @@ type ResponseAsset = {
   weightedAvgPrice: string
 }
 
-type Asset = ResponseAsset & { title: string }
+type ResponseGetAllAssets24hr = Asset24hrTicker[]
 
-export { type ResponseAsset, type Asset }
+export { type Asset24hrTicker, type ResponseGetAllAssets24hr }

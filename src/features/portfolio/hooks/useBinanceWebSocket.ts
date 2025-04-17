@@ -29,7 +29,9 @@ function useBinanceWebSocket(symbols: string[]) {
   useEffect(() => {
     // Создаем WebSocket только если его еще нет
     if (!wsRef.current) {
-      wsRef.current = new WebSocket('wss://stream.binance.com:9443/stream')
+      wsRef.current = new WebSocket(
+        import.meta.env.VITE_BINANCE_WEBSOCKET_STREAM_API_URL
+      )
     }
 
     const ws = wsRef.current
