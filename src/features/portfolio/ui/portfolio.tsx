@@ -1,7 +1,5 @@
-import { Dispatch, SetStateAction, useEffect, useMemo } from 'react'
-import { PortfolioAsset } from '@/features/portfolio/types'
+import { useEffect, useMemo } from 'react'
 import { useBinanceWebSocket } from '@/features/portfolio/hooks'
-import { updateAssetPricesInPortfolio } from '@/features/portfolio/lib'
 import {
   FormattedDecimal,
   Table,
@@ -11,13 +9,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui'
+import { useAppDispatch, useAppSelector } from '@/app/types.ts'
+import { updateAssetPrices } from '@/features/portfolio/store'
 
-type Props = {
-  portfolioAssets: PortfolioAsset[]
-  setPortfolioAssets: Dispatch<SetStateAction<PortfolioAsset[]>>
-}
+function Portfolio() {
+  const dispatch = useAppDispatch()
+  const portfolioAssets = useAppSelector((state) => state.portfolio)
 
-function Portfolio({ portfolioAssets, setPortfolioAssets }: Props) {
   // Получаем символы из портфеля
   const symbols = useMemo(
     () => portfolioAssets.map((asset) => asset.symbol),
@@ -35,9 +33,7 @@ function Portfolio({ portfolioAssets, setPortfolioAssets }: Props) {
   // Обновляем portfolioAssets при получении новых данных от WebSocket
   useEffect(() => {
     if (Object.keys(tickerData).length > 0) {
-      setPortfolioAssets((portfolio) =>
-        updateAssetPricesInPortfolio(portfolio, tickerData)
-      )
+      dispatch(updateAssetPrices(tickerData))
     }
   }, [tickerData])
 

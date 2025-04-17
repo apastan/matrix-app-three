@@ -17,40 +17,23 @@ import {
   TableRow,
 } from '@/components/ui'
 import { Label } from '@radix-ui/react-label'
-import {
-  ChangeEvent,
-  ComponentProps,
-  Dispatch,
-  FormEvent,
-  SetStateAction,
-  useRef,
-  useState,
-} from 'react'
+import { ChangeEvent, ComponentProps, FormEvent, useRef, useState } from 'react'
 import Decimal from 'decimal.js'
-import {
-  addAssetToPortfolio,
-  createTitleFromSymbol,
-  updateAssetQuantityInPortfolio,
-} from '@/features/portfolio/lib'
+import { createTitleFromSymbol } from '@/features/portfolio/lib'
 import {
   Asset24hrTicker,
   useGetAllAssets24hrQuery,
 } from '@/features/portfolio/api'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import {
-  PortfolioAsset,
-  PortfolioAssetCandidate,
-} from '@/features/portfolio/types'
-
-type Props = {
-  setPortfolioAssets: Dispatch<SetStateAction<PortfolioAsset[]>>
-} & ComponentProps<typeof Dialog>
+import { PortfolioAssetCandidate } from '@/features/portfolio/types'
+import { upsertAsset } from '@/features/portfolio/store'
+import { useAppDispatch } from '@/app/types.ts'
 
 export function AddAssetToPortfolioDialog({
-  setPortfolioAssets,
   onOpenChange,
   ...restDialogProps
-}: Props) {
+}: ComponentProps<typeof Dialog>) {
+  const dispatch = useAppDispatch()
   const {
     data: assetsFullList = [],
     isLoading,
@@ -106,27 +89,13 @@ export function AddAssetToPortfolioDialog({
       const newAssetToPortfolio: PortfolioAssetCandidate = {
         symbol: selectedAsset.symbol,
         title: selectedAsset.symbol.replace('USDT', ''),
-        lastPrice,
+        lastPrice: lastPrice.toString(),
         priceChangePercent: selectedAsset.priceChangePercent,
-        quantity,
-        totalValue,
+        quantity: quantity.toString(),
+        totalValue: totalValue.toString(),
       }
 
-      setPortfolioAssets((portfolio) => {
-        const isNewAssetInPortfolio = portfolio.find(
-          (a) => a.symbol === newAssetToPortfolio.symbol
-        )
-
-        if (isNewAssetInPortfolio) {
-          return updateAssetQuantityInPortfolio(
-            portfolio,
-            selectedAsset.symbol,
-            quantity
-          )
-        }
-
-        return addAssetToPortfolio(portfolio, newAssetToPortfolio)
-      })
+      dispatch(upsertAsset(newAssetToPortfolio))
     }
 
     if (closeDialogButtonRef.current) {

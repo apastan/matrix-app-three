@@ -1,15 +1,12 @@
-import { useState } from 'react'
 import { Container } from '@/components/layouts'
 import { AddAssetToPortfolioDialog } from '@/features/portfolio/ui/'
 import { useGetAllAssets24hrQuery } from '@/features/portfolio/api'
-import { PortfolioAsset } from '@/features/portfolio/types'
+
 import { Portfolio } from '@/features/portfolio/ui/portfolio.tsx'
 import { InfiniteLoader } from '@/components/ui'
 
 function App() {
   const { isLoading } = useGetAllAssets24hrQuery()
-
-  const [portfolioAssets, setPortfolioAssets] = useState<PortfolioAsset[]>([])
 
   return (
     <>
@@ -17,7 +14,7 @@ function App() {
         <Container className={'flex justify-between items-center'}>
           <div>Portfolio Overview</div>
 
-          <AddAssetToPortfolioDialog setPortfolioAssets={setPortfolioAssets} />
+          <AddAssetToPortfolioDialog />
         </Container>
       </header>
 
@@ -32,10 +29,7 @@ function App() {
               <InfiniteLoader size={40} />
             </div>
           ) : (
-            <Portfolio
-              setPortfolioAssets={setPortfolioAssets}
-              portfolioAssets={portfolioAssets}
-            />
+            <Portfolio />
           )}
         </Container>
       </main>

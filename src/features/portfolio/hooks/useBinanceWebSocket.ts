@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import Decimal from 'decimal.js'
 
 interface TickerData {
   s: string // Символ (например, "BTCUSDT")
@@ -13,7 +12,7 @@ interface TickerMessage {
 }
 
 interface WebSocketData {
-  lastPrice: Decimal
+  lastPrice: string
   priceChangePercent: string
 }
 
@@ -21,7 +20,6 @@ type WebSocketState = Record<string, WebSocketData>
 
 function useBinanceWebSocket(symbols: string[]) {
   const [tickerData, setTickerData] = useState<WebSocketState>({})
-  console.log('tickerData', tickerData)
   const wsRef = useRef<WebSocket | null>(null)
   const subscribedSymbolsRef = useRef<Set<string>>(new Set())
 
@@ -45,7 +43,7 @@ function useBinanceWebSocket(symbols: string[]) {
           setTickerData((prev) => ({
             ...prev,
             [data.s]: {
-              lastPrice: new Decimal(data.c),
+              lastPrice: data.c,
               priceChangePercent: data.P,
             },
           }))

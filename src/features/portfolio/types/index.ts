@@ -1,20 +1,19 @@
-import Decimal from 'decimal.js'
 import { Asset24hrTicker } from '@/features/portfolio/api'
 
 type PortfolioAsset = {
   title: string
   symbol: Asset24hrTicker['symbol']
-  lastPrice: Decimal
+  lastPrice: string
   priceChangePercent: Asset24hrTicker['priceChangePercent']
-  quantity: Decimal
-  totalValue: Decimal
-  weightInPortfolio: Decimal
+  quantity: string
+  totalValue: string
+  weightInPortfolio: string
 }
 
 type PortfolioAssetCandidate = Omit<PortfolioAsset, 'weightInPortfolio'>
 
 type AssetFieldsToUpdate = {
-  lastPrice: Decimal
+  lastPrice: string
   priceChangePercent: Asset24hrTicker['priceChangePercent']
 }
 
