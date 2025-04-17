@@ -22,6 +22,7 @@ function useBinanceWebSocket(PortfolioSymbolsAsString: string) {
   const [tickerData, setTickerData] = useState<WebSocketState>({})
   const wsRef = useRef<WebSocket | null>(null)
   const subscribedSymbolsRef = useRef<Set<string>>(new Set())
+  console.log(subscribedSymbolsRef)
 
   // Инициализация WebSocket
   useEffect(() => {
