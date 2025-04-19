@@ -34,7 +34,7 @@ function Portfolio() {
     if (Object.keys(tickerData).length > 0) {
       dispatch(updateAssetPrices(tickerData))
     }
-  }, [tickerData])
+  }, [tickerData, dispatch])
 
   // Логика удаления актива
   const [assetToRemove, setAssetToRemove] = useState<string | null>(null)
