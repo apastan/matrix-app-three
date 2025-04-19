@@ -2,7 +2,7 @@ import {
   ResponseGetAllAssets24hr,
   Asset24hrTicker,
 } from '@/features/portfolio/api'
-import { commonApi } from '@/app/common-api'
+import { commonApi } from '@/app/api'
 
 export const assetsApi = commonApi.injectEndpoints({
   endpoints: (builder) => ({

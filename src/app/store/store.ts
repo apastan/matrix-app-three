@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { commonApi } from '@/app/common-api.ts'
-import { portfolioReducer } from '@/features/portfolio/store/'
+import { commonApi } from '@/app/api'
+import { portfolioReducer } from '@/features/portfolio/store'
 
 export const store = configureStore({
   middleware: (getDefaultMiddleware) =>

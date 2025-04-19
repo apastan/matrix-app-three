@@ -1,8 +1,7 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 
 import { setupListeners } from '@reduxjs/toolkit/query'
-
-import { store } from './store'
+import { store } from '@/app/store'
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch

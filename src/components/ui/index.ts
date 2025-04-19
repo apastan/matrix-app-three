@@ -1,4 +1,4 @@
-export * from './button.tsx'
+export * from './button/button.tsx'
 export * from './dialog.tsx'
 export * from './input.tsx'
 export * from './label.tsx'

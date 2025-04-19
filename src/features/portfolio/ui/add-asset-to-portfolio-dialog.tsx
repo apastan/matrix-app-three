@@ -27,7 +27,7 @@ import {
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { PortfolioAssetCandidate } from '@/features/portfolio/types'
 import { upsertAsset } from '@/features/portfolio/store'
-import { useAppDispatch } from '@/app/types.ts'
+import { useAppDispatch } from '@/app/store/types.ts'
 
 export function AddAssetToPortfolioDialog({
   onOpenChange,

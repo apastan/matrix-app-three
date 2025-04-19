@@ -15,7 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui'
-import { useAppDispatch, useAppSelector } from '@/app/types.ts'
+import { useAppDispatch, useAppSelector } from '@/app/store/types.ts'
 import { removeAsset, updateAssetPrices } from '@/features/portfolio/store'
 import { getPortfolioSymbolsAsString } from '@/features/portfolio/lib'
 import { toast } from 'sonner'
