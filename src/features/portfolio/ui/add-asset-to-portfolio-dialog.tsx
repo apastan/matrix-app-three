@@ -3,6 +3,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -123,6 +124,9 @@ export function AddAssetToPortfolioDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Добавить валюту</DialogTitle>
+          <DialogDescription>
+            Выберети нужный актив из списка ниже
+          </DialogDescription>
         </DialogHeader>
 
         <Input
