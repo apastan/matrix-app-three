@@ -1,12 +1,12 @@
 import { Container } from '@/components/layouts'
 import { AddAssetToPortfolioDialog } from '@/features/portfolio/ui/'
-import { useGetAllAssets24hrQuery } from '@/features/portfolio/api'
 import { Toaster } from '@/components/ui/sonner'
 import { Portfolio } from '@/features/portfolio/ui/portfolio.tsx'
 import { InfiniteLoader } from '@/components/ui'
+import { useFakeLoading } from '@/hooks'
 
 function App() {
-  const { isLoading } = useGetAllAssets24hrQuery()
+  const { isLoading } = useFakeLoading(200)
 
   return (
     <>
