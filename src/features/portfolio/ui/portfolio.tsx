@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react'
-import { useBinanceWebSocket } from '@/features/portfolio/hooks'
+import {
+  useBinanceWebSocket,
+  useSetPortfolioAssetsToLocalStorage,
+} from '@/features/portfolio/hooks'
 import {
   Button,
   Dialog,
@@ -8,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
   FormattedDecimal,
+  FormattedDecimalOrSkeleton,
   Table,
   TableBody,
   TableCell,
@@ -22,13 +26,11 @@ import { toast } from 'sonner'
 
 function Portfolio() {
   const dispatch = useAppDispatch()
+
   const portfolioAssets = useAppSelector((state) => state.portfolio)
 
-  // Получаем символы из портфеля вида
-  const PortfolioSymbolsAsString = getPortfolioSymbolsAsString(portfolioAssets)
-
-  const tickerData = useBinanceWebSocket(PortfolioSymbolsAsString)
-
+  const portfolioSymbolsAsString = getPortfolioSymbolsAsString(portfolioAssets)
+  const tickerData = useBinanceWebSocket(portfolioSymbolsAsString)
   // Обновляем portfolioAssets при получении новых данных от WebSocket
   useEffect(() => {
     if (Object.keys(tickerData).length > 0) {
@@ -52,9 +54,12 @@ function Portfolio() {
     setAssetToRemove(null)
   }
 
+  // Логика сохранения с localStorage
+  useSetPortfolioAssetsToLocalStorage(portfolioAssets)
+
   return portfolioAssets.length > 0 ? (
     <>
-      <Table>
+      <Table className={'table-fixed'}>
         <TableHeader>
           <TableRow>
             <TableHead>Актив</TableHead>
@@ -73,29 +78,34 @@ function Portfolio() {
                 <FormattedDecimal rounding={5}>{a.quantity}</FormattedDecimal>
               </TableCell>
               <TableCell>
-                <FormattedDecimal rounding={2} before={'$'}>
+                <FormattedDecimalOrSkeleton rounding={2} before={'$'}>
                   {a.lastPrice}
-                </FormattedDecimal>
+                </FormattedDecimalOrSkeleton>
               </TableCell>
               <TableCell>
-                <FormattedDecimal rounding={2} before={'$'}>
+                <FormattedDecimalOrSkeleton rounding={2} before={'$'}>
                   {a.totalValue}
-                </FormattedDecimal>
+                </FormattedDecimalOrSkeleton>
               </TableCell>
               <TableCell>
-                <FormattedDecimal
+                <FormattedDecimalOrSkeleton
                   rounding={2}
                   withColors
                   withPlusSign
                   after={'%'}
+                  skeletonProps={{ className: 'w-[50px]' }}
                 >
                   {a.priceChangePercent}
-                </FormattedDecimal>
+                </FormattedDecimalOrSkeleton>
               </TableCell>
               <TableCell>
-                <FormattedDecimal rounding={2} after={'%'}>
+                <FormattedDecimalOrSkeleton
+                  rounding={2}
+                  after={'%'}
+                  skeletonProps={{ className: 'w-[50px]' }}
+                >
                   {a.weightInPortfolio}
-                </FormattedDecimal>
+                </FormattedDecimalOrSkeleton>
               </TableCell>
               <TableCell>
                 <Button

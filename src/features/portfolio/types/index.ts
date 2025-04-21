@@ -3,9 +3,9 @@ import { Asset24hrTicker } from '@/features/portfolio/api'
 type PortfolioAsset = {
   title: string
   symbol: Asset24hrTicker['symbol']
+  quantity: string
   lastPrice: string
   priceChangePercent: Asset24hrTicker['priceChangePercent']
-  quantity: string
   totalValue: string
   weightInPortfolio: string
 }
@@ -17,8 +17,14 @@ type AssetFieldsToUpdate = {
   priceChangePercent: Asset24hrTicker['priceChangePercent']
 }
 
+type PortfolioAssetLocalStorage = {
+  q: string
+  s: string
+}
+
 export {
   type PortfolioAsset,
   type AssetFieldsToUpdate,
   type PortfolioAssetCandidate,
+  type PortfolioAssetLocalStorage,
 }

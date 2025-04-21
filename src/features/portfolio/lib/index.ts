@@ -37,6 +37,8 @@ function getPortfolioSymbolsAsString(
   portfolioAssets: PortfolioAsset[],
   setting: { withQuantity?: boolean } = {}
 ) {
+  if (portfolioAssets.length === 0) return ''
+
   const { withQuantity = false } = setting
 
   return portfolioAssets

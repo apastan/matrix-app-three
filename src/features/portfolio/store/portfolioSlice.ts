@@ -6,8 +6,9 @@ import {
   PortfolioAsset,
   PortfolioAssetCandidate,
 } from '@/features/portfolio/types'
+import { getLocalStoragePortfolio } from '@/features/portfolio/store/getLocalStoragePortfolio.ts'
 
-const initialState: PortfolioAsset[] = []
+const initialState: PortfolioAsset[] = getLocalStoragePortfolio() || []
 
 const portfolioSlice = createSlice({
   name: 'portfolio',
