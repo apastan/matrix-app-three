@@ -33,9 +33,16 @@ function recalculatePortfolioWeights(
   }))
 }
 
-function getPortfolioSymbolsAsString(portfolioAssets: PortfolioAsset[]) {
+function getPortfolioSymbolsAsString(
+  portfolioAssets: PortfolioAsset[],
+  setting: { withQuantity?: boolean } = {}
+) {
+  const { withQuantity = false } = setting
+
   return portfolioAssets
-    .map((asset) => asset.symbol)
+    .map((asset) =>
+      withQuantity ? asset.symbol.concat(asset.quantity) : asset.symbol
+    )
     .sort() // Сортируем, чтобы игнорировать порядок активов в портфеле
     .join(',')
 }
