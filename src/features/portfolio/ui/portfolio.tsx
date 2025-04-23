@@ -7,6 +7,7 @@ import {
   Button,
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -131,6 +132,9 @@ function Portfolio() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Подтверждение удаления</DialogTitle>
+            <DialogDescription>
+              Подтвердите, что Вы действительно хотите удалить актив из портфеля
+            </DialogDescription>
           </DialogHeader>
           <p>Вы уверены, что хотите удалить актив {assetToRemove}?</p>
           <DialogFooter>

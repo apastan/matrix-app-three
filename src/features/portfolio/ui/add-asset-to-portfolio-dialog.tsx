@@ -125,7 +125,7 @@ export function AddAssetToPortfolioDialog({
         <DialogHeader>
           <DialogTitle>Добавить валюту</DialogTitle>
           <DialogDescription>
-            Выберети нужный актив из списка ниже
+            Выберите нужный актив из списка ниже
           </DialogDescription>
         </DialogHeader>
 
