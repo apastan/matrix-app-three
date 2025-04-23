@@ -1,54 +1,23 @@
-# React + TypeScript + Vite
+# Ссылки
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+- [ссылка на развернутый проект](https://apastan.github.io/matrix-app-three/)
+- [ссылка на github проекта](https://github.com/apastan/matrix-app-three)
 
-Currently, two official plugins are available:
+## В проекте реализованы следующие оптимизации
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Виртуализация данных (список в модальном окне добавления актива).
+- Кэширование запросов с помощью RTK Query.
+- Оптимизированная работа с WebSocket: подписка и отписка от отслеживаемых активов происходят только при изменении одного из активов в портфеле.
+- Оптимизированное сохранение в Local Storage: сохранение происходит только при изменении количества актива или добавлении (удалении) актива.
+  
+## В проекте используются следующие технологии:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+- React 19, TypeScript.
+- Redux Toolkit и RTK Query для управления состоянием и кэширования серверного состояния.
+- UI/Компоненты: Radix UI.
+- Стилизация: Tailwind CSS, Class Variance Authority, TW Animate CSS для анимаций, Clsx для условных классов.
+- Сборка и разработка: Vite.
+- Линтинг и форматирование: ESLint (с плагинами для React и TypeScript), Prettier.
+- Утилиты: Decimal.js для работы с числами.
+- Виртуализация: Tanstack React Virtual для оптимизации рендеринга списков.
+- WebSocket для подписки на стримы обновления стоимости активов.
