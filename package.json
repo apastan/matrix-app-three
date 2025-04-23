@@ -1,15 +1,17 @@
 {
-  "name": "vite-project",
+  "name": "matrix-app-three",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homapage": "https://apastan.github.io/matrix-app-three",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "format": "prettier --write src",
     "format:check": "prettier --check src",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.7",
@@ -42,6 +44,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "eslint-plugin-react-x": "^1.48.4",
+    "gh-pages": "^6.3.0",
     "globals": "^15.15.0",
     "prettier": "^3.5.3",
     "tailwindcss": "^4.1.3",
